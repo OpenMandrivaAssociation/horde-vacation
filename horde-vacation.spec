@@ -1,7 +1,7 @@
 %define	module	vacation
 %define	name	horde-%{module}
 %define version 3.0
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define _requires_exceptions pear(Horde.*)
 
