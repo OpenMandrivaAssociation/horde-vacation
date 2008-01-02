@@ -18,6 +18,7 @@ URL:		http://www.horde.org/%{module}/
 Requires:	horde >= 3.0
 Requires:	vacation
 BuildArch:	noarch
+BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 Vacation is a Horde module for managing user e-mail "vacation notices" or
