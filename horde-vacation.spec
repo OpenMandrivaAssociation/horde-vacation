@@ -65,9 +65,9 @@ find . -name .htaccess -exec rm -f {} \;
 install -d -m 755 %{buildroot}%{_var}/www/horde/%{module}
 install -d -m 755 %{buildroot}%{_datadir}/horde/%{module}
 install -d -m 755 %{buildroot}%{_sysconfdir}/horde
-install -d -m 755 %{buildroot}%{_localstatedir}/horde/%{module}
+install -d -m 755 %{buildroot}%{_localstatedir}/lib/horde/%{module}
 cp -pR *.php %{buildroot}%{_var}/www/horde/%{module}
-cp -pR files/* %{buildroot}%{_localstatedir}/horde/%{module}
+cp -pR files/* %{buildroot}%{_localstatedir}/lib/horde/%{module}
 cp -pR lib %{buildroot}%{_datadir}/horde/%{module}
 cp -pR locale %{buildroot}%{_datadir}/horde/%{module}
 cp -pR scripts %{buildroot}%{_datadir}/horde/%{module}
@@ -80,7 +80,7 @@ ln -s ../../../..%{_sysconfdir}/horde/%{module} config
 ln -s ../../../..%{_datadir}/horde/%{module}/lib .
 ln -s ../../../..%{_datadir}/horde/%{module}/locale .
 ln -s ../../../..%{_datadir}/horde/%{module}/templates .
-ln -s ../../../..%{_localstatedir}/horde/%{module} files
+ln -s ../../../..%{_localstatedir}/lib/horde/%{module} files
 popd
 
 %clean
@@ -93,5 +93,5 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/horde/%{module}
 %{_datadir}/horde/%{module}
 %{_var}/www/horde/%{module}
-%{_localstatedir}/horde/%{module}
+%{_localstatedir}/lib/horde/%{module}
 
