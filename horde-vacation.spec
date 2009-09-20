@@ -1,7 +1,7 @@
 %define	module	vacation
 %define	name	horde-%{module}
 %define version 3.1
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define _requires_exceptions pear(Horde.*)
 
@@ -11,11 +11,11 @@ Release:	%{release}
 Summary:	The Horde vacation management application
 License:	GPL
 Group:		System/Servers
+URL:		http://www.horde.org/%{module}/
 Source0:	ftp://ftp.horde.org/pub/%{module}/%{module}-h3-%{version}.tar.bz2
 Source2:	%{module}-horde.conf.bz2
 Patch:		%{module}-2.2.1.path.patch
-URL:		http://www.horde.org/%{module}/
-Requires:	horde >= 3.0
+Requires:	horde >= 3.3.5
 Requires:	vacation
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}
@@ -44,29 +44,58 @@ of Accounts, Forwards, Passwd, and Vacation.
 chmod 644 files/*
 chmod 644 lib/*.php
 
-# fix encoding
-for file in `find . -type f`; do
-    perl -pi -e 'BEGIN {exit unless -T $ARGV[0];} tr/\r//d;' $file
-done
-
 %build
 
 %install
 rm -rf %{buildroot}
 
+# apache configuration
+install -d -m 755 %{buildroot}%{_webappconfdir}
+cat > %{buildroot}%{_webappconfdir}/%{name}.conf <<EOF
+# %{name} Apache configuration file
+
+<Directory %{_datadir}/horde/%{module}/lib>
+    Deny from all
+</Directory>
+
+<Directory %{_datadir}/horde/%{module}/locale>
+    Deny from all
+</Directory>
+
+<Directory %{_datadir}/horde/%{module}/scripts>
+    Deny from all
+</Directory>
+
+<Directory %{_datadir}/horde/%{module}/templates>
+    Deny from all
+</Directory>
+EOF
+
 # horde configuration
 install -d -m 755 %{buildroot}%{_sysconfdir}/horde/registry.d
-bzcat %{SOURCE2} > %{buildroot}%{_sysconfdir}/horde/registry.d/%{module}.php
+cat > %{buildroot}%{_sysconfdir}/horde/registry.d/%{module}.php <<'EOF'
+<?php
+//
+// Vacation Horde configuration file
+//
+ 
+$this->applications['vacation'] = array(
+    'fileroot'    => $this->applications['horde']['fileroot'] . '/vacation',
+    'webroot'     => $this->applications['horde']['webroot'] . '/vacation',
+    'name'        => _("Vacation"),
+    'status'      => 'active',
+    'provides'    => 'vacation',
+    'menu_parent' => 'myaccount'
+);
+EOF
 
 # remove .htaccess files
 find . -name .htaccess -exec rm -f {} \;
 
 # install files
-install -d -m 755 %{buildroot}%{_var}/www/horde/%{module}
 install -d -m 755 %{buildroot}%{_datadir}/horde/%{module}
-install -d -m 755 %{buildroot}%{_sysconfdir}/horde
 install -d -m 755 %{buildroot}%{_localstatedir}/lib/horde/%{module}
-cp -pR *.php %{buildroot}%{_var}/www/horde/%{module}
+cp -pR *.php %{buildroot}%{_datadir}/horde/%{module}
 cp -pR files/* %{buildroot}%{_localstatedir}/lib/horde/%{module}
 cp -pR lib %{buildroot}%{_datadir}/horde/%{module}
 cp -pR locale %{buildroot}%{_datadir}/horde/%{module}
@@ -74,13 +103,9 @@ cp -pR scripts %{buildroot}%{_datadir}/horde/%{module}
 cp -pR templates %{buildroot}%{_datadir}/horde/%{module}
 cp -pR config %{buildroot}%{_sysconfdir}/horde/%{module}
 
-# use symlinks to recreate original structure
-pushd %{buildroot}%{_var}/www/horde/%{module}
+install -d -m 755 %{buildroot}%{_sysconfdir}/horde
+pushd %{buildroot}%{_datadir}/horde/%{module}
 ln -s ../../../..%{_sysconfdir}/horde/%{module} config
-ln -s ../../../..%{_datadir}/horde/%{module}/lib .
-ln -s ../../../..%{_datadir}/horde/%{module}/locale .
-ln -s ../../../..%{_datadir}/horde/%{module}/templates .
-ln -s ../../../..%{_localstatedir}/lib/horde/%{module} files
 popd
 
 %clean
@@ -89,9 +114,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %doc LICENSE README docs
+%config(noreplace) %{_webappconfdir}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/horde/registry.d/%{module}.php
 %config(noreplace) %{_sysconfdir}/horde/%{module}
 %{_datadir}/horde/%{module}
-%{_var}/www/horde/%{module}
 %{_localstatedir}/lib/horde/%{module}
-
