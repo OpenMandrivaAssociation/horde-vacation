@@ -1,7 +1,7 @@
 %define	module	vacation
 %define	name	horde-%{module}
 %define version 3.1
-%define release %mkrel 3
+%define release %mkrel 4
 
 %define _requires_exceptions pear(Horde.*)
 
@@ -17,6 +17,7 @@ Source2:	%{module}-horde.conf.bz2
 Patch:		%{module}-2.2.1.path.patch
 Requires:	horde >= 3.3.5
 Requires:	vacation
+Requires(post):	rpm-helper
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
@@ -110,6 +111,12 @@ popd
 
 %clean
 rm -rf %{buildroot}
+
+%post
+%_post_webapp
+
+%postun
+%_postun_webapp
 
 %files
 %defattr(-,root,root)
