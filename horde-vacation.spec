@@ -1,7 +1,7 @@
 %define	module	vacation
 %define	name	horde-%{module}
 %define version 3.1
-%define release %mkrel 6
+%define release %mkrel 7
 
 %define _requires_exceptions pear(Horde.*)
 
@@ -19,7 +19,6 @@ Requires:	horde >= 3.3.5
 Requires:	vacation
 Requires(post):	rpm-helper
 BuildArch:	noarch
-BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 Vacation is a Horde module for managing user e-mail "vacation notices" or
