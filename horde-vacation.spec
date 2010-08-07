@@ -1,7 +1,7 @@
 %define	module	vacation
 %define	name	horde-%{module}
-%define version 3.1
-%define release %mkrel 7
+%define version 3.2.1
+%define release %mkrel 1
 
 %define _requires_exceptions pear(Horde.*)
 
@@ -12,7 +12,7 @@ Summary:	The Horde vacation management application
 License:	GPL
 Group:		System/Servers
 URL:		http://www.horde.org/%{module}/
-Source0:	ftp://ftp.horde.org/pub/%{module}/%{module}-h3-%{version}.tar.bz2
+Source0:	ftp://ftp.horde.org/pub/%{module}/%{module}-h3-%{version}.tar.gz
 Source2:	%{module}-horde.conf.bz2
 Patch:		%{module}-2.2.1.path.patch
 Requires:	horde >= 3.3.5
