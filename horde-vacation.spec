@@ -8,7 +8,7 @@
 
 Name:		horde-%{module}
 Version:	3.2.1
-Release:	2
+Release:	3
 Summary:	The Horde vacation management application
 License:	GPL
 Group:		System/Servers
@@ -108,7 +108,6 @@ ln -s ../../../..%{_sysconfdir}/horde/%{module} config
 popd
 
 %files
-%defattr(-,root,root)
 %doc LICENSE README docs
 %config(noreplace) %{_webappconfdir}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/horde/registry.d/%{module}.php
