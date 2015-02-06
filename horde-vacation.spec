@@ -8,7 +8,7 @@
 
 Name:		horde-%{module}
 Version:	3.2.1
-Release:	3
+Release:	4
 Summary:	The Horde vacation management application
 License:	GPL
 Group:		System/Servers
